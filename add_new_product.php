@@ -70,6 +70,10 @@
 					$photo_new_name = "no_photo.jpg";
 					
 				}
+
+				if(!is_dir("./upload")){
+				    mkdir("./upload", 0777);
+				}
 				$destination = "upload/".$photo_new_name;
 				//koniec walidacji danych
 				

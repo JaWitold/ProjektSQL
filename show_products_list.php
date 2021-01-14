@@ -22,7 +22,7 @@
 			
 			if($query->rowCount() !=0) {
 				$result = $query->fetchAll(PDO::FETCH_ASSOC);
-				
+				require_once "functions.php";
 				echo '<table class="table table-dark table-striped text-center"><thead><tr><td>Nazwa</td><td>Cena NETTO</td><td>VAT</td><td>Cena Sprzedaży</td><td>Ilość</td></tr></thead><tbody>';
 				foreach($result as $r) {
 					echo '<tr class="my-auto"><td><a href="show_product.php?id='.$r['productId'].'">'.$r['productName']."</a></td>";

@@ -95,7 +95,11 @@
 				} else {
 					$photo_new_name = $photo_old_name["photo"];
 				}
-				
+
+                if(!is_dir("./upload")){
+                    mkdir("./upload", 0777);
+                }
+
 				$destination = "upload/".$photo_new_name;
 				
 				//print_r($destination);

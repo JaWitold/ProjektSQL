@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html>
-<head lang="pl-PL">
+<html lang="pl-PL">
+<head>
 
 	<meta charset="UTF-8">
 	<title>LANGNER</title>

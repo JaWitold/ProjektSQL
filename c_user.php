@@ -3,13 +3,13 @@
 	$roles = ["Administrator", "Ksiegowy", "Pracownik"];
 
 	class User {
-        public string $name;
-        public string $surname;
+        private string $name;
+        private string $surname;
         private string $login;
         private string $pass;
-        public string $role;
-        public string $date;
-        public bool $active;
+        private string $role;
+        private string $date;
+        private bool $active;
 
         function __construct(string $login = "") {
             if (strlen($login) !== 0) {

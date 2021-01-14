@@ -71,10 +71,10 @@ CREATE OR REPLACE TABLE Sold (
 CREATE OR REPLACE TABLE Logs (
   login varchar(255) NOT NULL,
     dateOfLastLogin datetime NOT NULL,
-    CONSTRAINT LogsConstraint
-        FOREIGN KEY (login) REFERENCES Users (login) ON DELETE CASCADE
+#     CONSTRAINT LogsConstraint
+#         FOREIGN KEY (login) REFERENCES Users (login) ON DELETE CASCADE
 );
 
-INSERT INTO `users` (`userName`, `userSurname`, `login`, `password`, `role`, `dateOfAdd`, `activePassword`) VALUES ('Piotr', 'Rzepka', 'Pivtrek', '$2y$10$Ip5fcfEStO1J9yLzF8Kpp.cEmyWe3wY6qpNo7B3ML65Nvtlvs545a', 'Administrator', '2021-01-13', '1');
-INSERT INTO `users` (`userName`, `userSurname`, `login`, `password`, `role`, `dateOfAdd`, `activePassword`) VALUES ('Witold', 'Karas', 'JaWitold', '$2y$10$Ip5fcfEStO1J9yLzF8Kpp.cEmyWe3wY6qpNo7B3ML65Nvtlvs545a', 'Administrator', '2021-01-13', '1');
---password = QWERTY123
+INSERT INTO `users` (`userName`, `userSurname`, `login`, `password`, `role`, `dateOfAdd`, `activePassword`) VALUES ('Piotr', 'Rzepka', 'Pivtrek', '$2y$10$Ip5fcfEStO1J9yLzF8Kpp.cEmyWe3wY6qpNo7B3ML65Nvtlvs545a', 'Administrator', '2001-01-01', '1');
+INSERT INTO `users` (`userName`, `userSurname`, `login`, `password`, `role`, `dateOfAdd`, `activePassword`) VALUES ('Witold', 'Karas', 'JaWitold', '$2y$10$Ip5fcfEStO1J9yLzF8Kpp.cEmyWe3wY6qpNo7B3ML65Nvtlvs545a', 'Administrator', '2001-01-01', '1');
+##password = qwerty123

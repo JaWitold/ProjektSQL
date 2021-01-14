@@ -20,7 +20,7 @@
 	} catch(Exception $e) {
 		echo $e->getMessage();
 	}
-
+    require_once "functions.php";
 
     require_once "html_elements/head.php";
     require_once "html_elements/navbar.php";
@@ -44,9 +44,9 @@
 		<div class="row">
             <div class="col-md-8">
                 <table class="table table-dark table-striped">
-                    <tr><th>Cena NETTO</th><td><?php echo $result["netPrice"].add_zeros($result["netPrice"]);?> PLN</td></tr>
-                    <tr><th>VAT</th><td><?php echo $result["tax"];?>%</td></tr>
-                    <tr><th>Cena BRUTTO</th><td><?php echo brutto($result["netPrice"], $result["tax"]).add_zeros(brutto($result["netPrice"], $result["tax"]));?> PLN</td></tr>
+                    <tr><th>Cena Netto</th><td><?php echo $result["netPrice"].add_zeros($result["netPrice"]);?> PLN</td></tr>
+                    <tr><th>Vat</th><td><?php echo $result["tax"];?>%</td></tr>
+                    <tr><th>Cena Brutto</th><td><?php echo brutto($result["netPrice"], $result["tax"]).add_zeros(brutto($result["netPrice"], $result["tax"]));?> PLN</td></tr>
                     <tr><th>Ilość</th><td><?php echo $result["amount"]." ".$result["unitOfMeasure"];?></td></tr>
                 </table>
 
