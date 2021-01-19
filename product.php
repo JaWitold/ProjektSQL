@@ -230,12 +230,35 @@ class product
 
     public static function validPhoto($photo): bool
     {
-        $format = ["jpg" , "jpeg", "png"];
+        $format = ["jpg" , "jpeg", "png", "gif"];
 
         $photo_format = explode(".", $photo['name']);
         $photo_format = end($photo_format);
 
-        return (!is_array($photo) || $photo['error'] !== 0 || !in_array($photo_format, $format) || $photo['size'] > 200000);
+        $photo_type = explode("/", $photo['type']);
+        $photo_type = end($photo_type);
+
+        if(!is_array($photo)) {
+            return false;
+        }
+
+        if($photo['error'] !== 0) {
+            return false;
+        }
+
+        if(!in_array(strtolower($photo_format), $format)) {
+            return false;
+        }
+
+        if(!in_array(strtolower($photo_type), $format)) {
+            return false;
+        }
+
+        if($photo['size'] > 200000) {
+            return false;
+        }
+
+        return true;
     }
 
     public static function validAll($productName, $netPrice, $tax, $amount, $unitOfMeasure): bool

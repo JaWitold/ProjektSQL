@@ -146,7 +146,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="tax">Vat</label>
                     </div>
-                    <input type="number" name="tax" id="tax" placeholder="Stawka Vat" step="0.1" max="100" min="0"  class="form-control" required <?php if(isset($tax)){echo 'value="'.$tax.'"'; unset($tax);}else echo 'value="23"'?>>
+                    <input type="number" name="tax" id="tax" placeholder="Stawka Vat" step="1" max="100" min="0"  class="form-control" required <?php if(isset($tax)){echo 'value="'.$tax.'"'; unset($tax);}else echo 'value="23"'?>>
                     <div class="input-group-append">
                         <label class="input-group-text" for="tax">%</label>
                     </div>

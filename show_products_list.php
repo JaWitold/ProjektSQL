@@ -55,7 +55,7 @@
                     foreach ($products as $product) {
                         echo "<tr>";
                         echo $product->getAsRow();
-                        echo '<td><a href="./show_product.php/?id=' . $product->getProductId() . '">pokaż</a></td>';
+                        echo '<td><a href="./show_product_details.php?id=' . $product->getProductId() . '">pokaż</a></td>';
                         echo "</tr>";
                     }
                     echo '</tbody></table>';
