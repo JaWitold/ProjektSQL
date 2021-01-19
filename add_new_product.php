@@ -41,7 +41,6 @@
                 $uom = $_POST['uom'];
 
 				$photo = $_FILES['photo'];
-
 				//przetwarzanie zdjecia
 				if($photo['error'] !== 4){
 				$format = ["jpg" , "jpeg", "png"];
@@ -68,11 +67,10 @@
 				$photo_new_name = uniqid().".".$photo_format;
 				} else {
 					$photo_new_name = "no_photo.jpg";
-					
 				}
 
-				if(!is_dir("./upload")){
-				    mkdir("./upload", 0777);
+				if(!is_dir("upload")){
+				    mkdir("upload", 0777);
 				}
 				$destination = "upload/".$photo_new_name;
 				//koniec walidacji danych
@@ -112,9 +110,9 @@
 		}
 	}
 
-	require_once "html_elements/head.php";
-	require_once "html_elements/navbar.php";
-    require_once "html_elements/currentUser.php";
+	require_once $_SERVER['DOCUMENT_ROOT']."/ProjektSQL/"."html_elements/head.php";
+	require_once $_SERVER['DOCUMENT_ROOT']."/ProjektSQL/"."html_elements/navbar.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/ProjektSQL/"."html_elements/currentUser.php";
 	?>
 
 	<div class="container">
@@ -198,5 +196,3 @@
             </div>
         </form>
 	</div>
-
-	<?php require_once "html_elements/ending.php"; ?>

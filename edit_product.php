@@ -4,47 +4,41 @@
 
 	if(!isset($_POST['productId'])) {
 	    print_r($_POST);
-	    header('Location:show_products_list.php');
-		exit();
+	   // header('Location:show_products_list.php');
+		//exit();
 	} else {
 		try {
-		    $productId = $_POST['productId'];
-
 			if(isset($_POST['productName'])) {
-				$all_ok = true;
-				
-				$productName = $_POST['productName'];
-				if(strlen($productName) < 3 || strlen($productName) > 100) {
-					$all_ok = false;
+			    require_once "product.php";
+				$valid = true;
+
+				$product = new product(NULL);
+				$product->setProductId($_POST['productId']);
+				$product->setNetPrice($_POST['productName']);
+                $product->setNetPrice($_POST['netPrice']);
+				$product->setTax($_POST['tax']);
+				$product->setAmount($_POST['amount']);
+				$product->setUnitOfMeasure($_POST['uom']);
+
+
+				if(!$product->checkName()) {
+					$valid = false;
 					$_SESSION['e_nazwa']="Nazwa produktu powinna zawierać od 3 do 100 znaków";
 				}
-				
-				$netPrice = $_POST['netPrice'];
-				
-				if(!is_numeric($netPrice) || $netPrice <= 0) {
-					$all_ok = false;
+
+				if(!$product->checkNetPrice()) {
+					$valid = false;
 					$_SESSION['e_netPrice']="Nie poprawna wartość ceny zakupu";
 				}
 				
-				$tax = $_POST['tax'];
-				
-				if(!is_numeric($tax) || $tax > 100 || $tax < 0) {
-					$all_ok = false;
+				if(!$product->checkTax()) {
+					$valid = false;
 					$_SESSION['e_vat']="Nie poprawna wartość stawki vat";
 				}
-
-				$amount = $_POST['amount'];
 				
-				if(!is_numeric($amount)) {
-					$all_ok = false;
+				if(!$product->checkAmount()) {
+					$valid = false;
 					$_SESSION['e_ilosc']="Nie poprawna wartość pola ilość";
-				}
-				
-				$uom = $_POST['uom'];
-				
-				if((intval($amount) != $amount) && !strcmp($uom ,"szt")) {
-					$all_ok = false;
-					$_SESSION['e_ilosc'] = "Nie sprzedajemy nie pełnych opakowań";				
 				}
 
 				$photo = $_FILES['photo'];
@@ -55,36 +49,23 @@
                 require_once "connect.php";
                 global $db;
 				$query = $db->prepare('SELECT photo FROM products WHERE productId = :productId');
-				$query->bindValue(':productId', $productId, PDO::PARAM_INT);
+				$query->bindValue(':productId', $product->getProductId(), PDO::PARAM_INT);
 				$query->execute();
 					
 				$photo_old_name = $query->fetch(PDO::FETCH_ASSOC);
 				
 				//przetwarzanie zdjecia
 				if($photo['error'] !== 4) {
-					$format = ["jpg" , "jpeg", "png"];
-					
-					$photo_format = explode(".", $photo['name']);
-					$photo_format = end($photo_format);
-					//echo $photo_format;
-					
-					if(!in_array($photo_format, $format)) {
-						$all_ok = false;
-						$_SESSION["e_file"] = "Nie poprawny format pliku";
-					}
-					
-					if($photo['error'] !== 0) {
-						$all_ok = false;
-						$_SESSION["e_file"] = "Wystąpił błąd podczas przesylania pliku";
-					}
-					
-					if($photo['size'] > 200000) {
-						$all_ok = false;
-						$_SESSION["e_file"] = "Plik jest za duży :P";
+
+					if(!product::validPhoto($photo)) {
+						$valid = false;
+						$_SESSION["e_file"] = "Błąd przetwarzania zdjęcia";
 					}
 					//print_r($photo_old_name);
 					//exit();
-					
+                    $photo_format = explode(".", $photo['name']);
+                    $photo_format = end($photo_format);
+
 					if(!strcmp($photo_old_name["photo"],'no_photo.jpg')) {
 						$photo_new_name = uniqid().".".$photo_format;
 					} else {
@@ -96,32 +77,23 @@
 					$photo_new_name = $photo_old_name["photo"];
 				}
 
-                if(!is_dir("./upload")){
-                    mkdir("./upload", 0777);
+                if(!is_dir("upload")){
+                    mkdir("upload", 0777);
                 }
 
 				$destination = "upload/".$photo_new_name;
 				
 				//print_r($destination);
 				
-				if($all_ok == true)
+				if($valid == true)
 				{
 					if($photo["error"] !== 4) {
 						//upload pliku
 						move_uploaded_file($photo["tmp_name"], $destination);
 					}
 
-                    require_once "connect.php";
-					global $db;
-					$query = $db->prepare('UPDATE products SET productName = :productName, netPrice = :netPrice, tax = :tax, amount = :amount, unitOfMeasure = :uom, photo = :photo WHERE productId = :productId');
-					$query-> bindValue(':productName', $productName, PDO::PARAM_STR);
-					$query-> bindValue(':netPrice', $netPrice, PDO::PARAM_STR);
-					$query-> bindValue(':tax', $tax, PDO::PARAM_STR);
-					$query-> bindValue(':amount', $amount, PDO::PARAM_STR);
-					$query-> bindValue(':uom', $uom, PDO::PARAM_STR);
-					$query-> bindValue(':photo', $photo_new_name, PDO::PARAM_STR);
-					$query-> bindValue(':productId', $productId, PDO::PARAM_INT);
-					$query->execute();
+                    $product->setPhoto($photo_new_name);
+                    $product->updateProductInDatabase();
 					
 					header("Location: show_products_list.php");
 					//echo '<a href="show_products_list.php">back</a>';
@@ -131,11 +103,11 @@
                 require_once "connect.php";
 				global $db;
 				$query = $db->prepare("SELECT * FROM products WHERE productId = :productId");
-				$query->bindValue(':productId', $productId, PDO::PARAM_INT);
+				$query->bindValue(':productId', $product->getProductId(), PDO::PARAM_INT);
 				$query->execute();
-				
+
 				$result = $query->fetch(PDO::FETCH_ASSOC);
-				
+
 				$productName = $result['productName'];
 				$netPrice = $result["netPrice"];
 				$tax = $result['tax'];
@@ -147,9 +119,9 @@
 			echo $e->getMessage();
 		}
 	}
-    require_once "html_elements/head.php";
-    require_once "html_elements/navbar.php";
-    require_once "html_elements/currentUser.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/html_elements/head.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/html_elements/navbar.php";
+    require_once $_SERVER['DOCUMENT_ROOT'] . "/html_elements/currentUser.php";
 ?>
 
 	<div class="container">
@@ -239,4 +211,4 @@
 
 
 
-<?php require_once "html_elements/ending.php"?>
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . "/html_elements/ending.php" ?>

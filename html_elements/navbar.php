@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark  py-3">
+<nav class="navbar navbar-expand-lg navbar-dark py-3">
 
 	<a class="navbar-brand" href="index.php">Langner</a>
 	
@@ -19,7 +19,7 @@
 				<a class="nav-link" href="show_users_list.php">pokaż liste pracowników</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="show_user_details.php?login=<?php require_once "c_user.php"; $currentUser = unserialize($_SESSION['user']); echo $currentUser->getLogin();?>">Moje dane</a>
+				<a class="nav-link" href="show_user_details.php?login=<?php require_once "c_user.php"; $currentUser = unserialize($_SESSION['user']); echo $currentUser->getLogin();?>">moje dane</a>
 			</li>
 		</ul>
 		

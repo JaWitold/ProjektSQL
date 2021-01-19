@@ -7,4 +7,4 @@
 	require_once "html_elements/navbar.php";
 	require_once "html_elements/currentUser.php";
 
-	require_once "html_elements/ending.php";
+    require_once "html_elements/ending.php";
