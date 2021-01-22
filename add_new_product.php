@@ -1,10 +1,8 @@
 ﻿<?php
-    session_start();
+    require_once "checkPermissions.php";
+    isLogged();
 
-	if(!isset($_SESSION['logged'])) {
-		header('Location:login.php');
-		exit();
-	} else {
+
 
 		try {
 			if(isset($_POST['productName'])) {
@@ -108,7 +106,7 @@
 		} catch(Exception $e) {
 			echo $e->getMessage();
 		}
-	}
+
 
 	require_once $_SERVER['DOCUMENT_ROOT']."/ProjektSQL/"."html_elements/head.php";
 	require_once $_SERVER['DOCUMENT_ROOT']."/ProjektSQL/"."html_elements/navbar.php";

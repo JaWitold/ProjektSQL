@@ -22,7 +22,8 @@
 				<a class="nav-link" href="show_user_details.php?login=<?php require_once "c_user.php"; $currentUser = unserialize($_SESSION['user']); echo $currentUser->getLogin();?>">moje dane</a>
 			</li>
 		</ul>
-		
+
+        <?php require_once "checkPermissions.php"; if(showForAccountant() || showForAdmin()) echo '<a class="nav-link btn btn-outline-success float-right mx-3" href="backup.php">backup</a>';?>
 		<a class="nav-link btn btn-outline-light float-right" href="logout.php">Wyloguj</a>
 		
 	</div>
