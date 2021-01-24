@@ -3,7 +3,6 @@
     isLogged();
 
 
-
 		try {
 			if(isset($_POST['productName'])) {
 
@@ -77,9 +76,11 @@
 				{
 				    require_once "connect.php";
 				    global $db;
-					$querry = $db->prepare("SELECT * FROM products WHERE productName = :productName");
+				    $db->beginTransaction();
+				    $querry = $db->prepare("SELECT * FROM products WHERE productName = :productName");
 					$querry-> bindValue(':productName', $productName, PDO::PARAM_STR);
-					$querry->execute();		
+					$querry->execute();
+                    $db->rollBack();
 					
 					$result = $querry->rowCount();
 					if($result === 0) {
@@ -98,7 +99,8 @@
 
 						header("Location: show_products_list.php");
 						exit();
-					} else {
+					}
+					else {
 						$_SESSION["error"] = "istnieje juz produkt o tej nazwie";
 					}
 				}
