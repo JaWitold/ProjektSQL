@@ -7,11 +7,9 @@
 		exit();
 	} else {
 		try {
-//			print_r($_SESSION);
-//			print_r($_SESSION['user']);
             $user_object = unserialize($_SESSION['user']);
 
-			if(!$user_object->active) {
+			if(!$user_object->isActive()) {
 				if(isset($_POST['pass'])) {
 					$all_ok = true;
 
