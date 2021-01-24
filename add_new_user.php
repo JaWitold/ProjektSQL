@@ -1,19 +1,13 @@
 ﻿<?php
-session_start();
+    require_once "checkPermissions.php";
+    isAdministator();
+
     require_once "c_user.php";
     $currentUser = unserialize($_SESSION['user']);
 
-	if(!isset($_SESSION['logged'])) {
-		$access = ["Administrator"];
-		if(!in_array($currentUser->getRole(), $access)) {
-			header('Location:login.php');
-			exit();
-		}
-	}
 
 	try {
 		if(isset($_POST["name"])) {
-		    require_once "c_user.php";
 
 			$all_ok = true;
 			$user = new User();

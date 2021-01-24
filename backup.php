@@ -76,7 +76,7 @@
                 require_once "c_user.php";
                 $currentUser = unserialize($_SESSION['user']);
 
-                generateBackup("./backups/autobackup_" . $currentUser->getLogin()."_". $date->format("Y-m-d H i s") . ".sql");
+                generateBackup("./backups/autobackup_" . $currentUser->getLogin()."_". $date->format("Y-m-d_H_i_s") . ".sql");
                 //print_r($_FILES['backup']);
 
 
