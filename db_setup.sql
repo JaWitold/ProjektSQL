@@ -40,6 +40,9 @@ CREATE OR REPLACE TABLE Users (
     activePassword boolean NOT NULL
 );
 
+CREATE TRIGGER `dateOfAdd` BEFORE INSERT ON `users`
+    FOR EACH ROW SET NEW.dateOfAdd=curdate();
+
 # CREATE OR REPLACE TABLE Corrections (
 #     invoiceId int NOT NULL UNIQUE,
 #     correctionId int NOT NULL UNIQUE,
