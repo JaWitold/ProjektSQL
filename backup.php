@@ -1,50 +1,52 @@
 <?php
 
     function generateBackup($filepath) {
-        $file = fopen($filepath, "w");
-        $setup = fopen("./db_setup.sql", "r");
-        $backup = fread($setup, filesize("./db_setup.sql"));
-        fclose($setup);
         //echo $backup;
         require_once "connect.php";
         global $db;
-        $query  = $db->query("SHOW TABLES");
-        $query->execute();
-        $result = $query->fetchAll();
+//        $query  = $db->query("SHOW TABLES");
+//        $query->execute();
+//        $result = $query->fetchAll();
+//
+//        foreach ($result as $r) {
+//            //echo $r[0]."<br>";
+//
+//            $query2 = $db->query("SELECT * FROM $r[0]");
+//            $query2->execute();
+//            $items = $query2->fetchAll(PDO::FETCH_ASSOC);
+//
+//            if($query2->rowCount() != 0) {
+//                foreach ($items as $i) {
+//                    $msg = "INSERT INTO $r[0] VALUES ( '";
+//                    $last = end($i);
+//                    foreach ($i as $v) {
+//                        if($v === $last) {
+//                            $msg = $msg . $v . "' );";
+//                        } else {
+//                            $msg = $msg . $v . "', '";
+//                        }
+//
+//                    }
+//                    $backup = $backup . $msg . "\n";
+//                }
+//            }
+//        }
+        $database = 'langner';
+        $user = 'langner_admin';
+        $pass = 'qwerty123';
+        $host = 'localhost';
+        $dir = './dump.sql';
 
-        foreach ($result as $r) {
-            //echo $r[0]."<br>";
-
-            $query2 = $db->query("SELECT * FROM $r[0]");
-            $query2->execute();
-            $items = $query2->fetchAll(PDO::FETCH_ASSOC);
-
-
-            if($query2->rowCount() != 0) {
-                foreach ($items as $i) {
-                    $msg = "INSERT INTO $r[0] VALUES ( '";
-                    $last = end($i);
-                    foreach ($i as $v) {
-                        if($v === $last) {
-                            $msg = $msg . $v . "' );";
-                        } else {
-                            $msg = $msg . $v . "', '";
-                        }
-
-                    }
-                    $backup = $backup . $msg . "\n";
-                }
-            }
-        }
-        fwrite($file, $backup);
-        fclose($file);
+        chdir ("C:/Programs/xammp/mysql/bin/");
+        exec("mysqldump --user={$user} --password={$pass} --host={$host} {$database} --result-file=C:/Programs/xammp/htdocs/ProjektSQL/{$filepath} 2>&1", $output);
+        chdir ("C:/Programs/xammp/htdocs/ProjektSQL");
     }
 
     require_once "checkPermissions.php";
     isAccountant();
 
-    if(isset($_GET['action'])) {
-        $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING);
+    if(isset($_POST['action'])) {
+        $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
         //echo $action;
         if(!strcmp($action, "export")) {
 
@@ -54,6 +56,7 @@
             generateBackup($filepath);
 
             if(!empty($filename) && file_exists($filepath)) {
+
                 header("Cashe-Control: public");
                 header("Content-Description: File Transfer");
                 header("Content-Disposition: attachment; filename=$filename");
@@ -65,10 +68,28 @@
                 unlink($filepath);
                 exit();
             }
-        } else if(!strcmp($action, "import")) {
-            //todo: import
-        } else {
 
+        } else if(!strcmp($action, "import")) {
+            $backup = $_FILES['backup'];
+            if($backup['error'] == 0) {
+                $date = new DateTime();
+                require_once "c_user.php";
+                $currentUser = unserialize($_SESSION['user']);
+
+                generateBackup("./backups/autobackup_" . $currentUser->getLogin()."_". $date->format("Y-m-d H i s") . ".sql");
+                //print_r($_FILES['backup']);
+
+
+                $cmd = "mysql -h localhost -u langner_admin -pqwerty123 langner < {$backup['tmp_name']}";
+
+                chdir ("C:/Programs/xammp/mysql/bin/");
+                exec($cmd);
+                chdir ("C:/Programs/xammp/htdocs/ProjektSQL");
+                header("Location: index.php");
+                exit();
+            } else {
+                $_SESSION['e_file'] = "Wystąpił błąd";
+            }
         }
     }
 
@@ -79,27 +100,28 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <form method="POST" class="form-group col-md-6">
                 <h2 class="text-center h2 my-3">EXPORT</h2>
-                <a class="btn btn-success btn-block" href="backup.php?action=export">Export bazy danych</a>
-            </div>
+                <input type="hidden" name="action" value="export">
+                <input class="btn btn-success btn-block" type="submit" value="Export bazy danych">
+            </form>
 
-            <form method="get" class="form-group col-md-6" enctype="multipart/form-data">
+            <form method="POST" class="form-group col-md-6" enctype="multipart/form-data">
                 <h2 class="text-center h2 my-3">IMPORT</h2>
 
                 <input type="hidden" name="action" value="import">
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <label class="input-group-text" for="photo">dodaj plik (.sql)</label>
+                        <label class="input-group-text" for="backup">dodaj plik (.sql)</label>
                     </div>
                     <div class="custom-file">
-                        <label class="custom-file-label" for="photo" id="fileName"></label>
-                        <input type="file" name="photo" id="photo" class="form-control-file"><?php if(isset($_SESSION["e_file"])){echo '<span style="color:red">'.$_SESSION["e_file"].'</span>'; unset($_SESSION["e_file"]);}?>
+                        <label class="custom-file-label" for="backup" id="fileName"></label>
+                        <input type="file" name="backup" id="backup" class="form-control-file"><?php if(isset($_SESSION["e_file"])){echo '<span style="color:red">'.$_SESSION["e_file"].'</span>'; unset($_SESSION["e_file"]);}?>
                         <script>
-                            document.getElementById("photo").addEventListener('change', function() {
-                                document.getElementById("fileName").textContent = document.getElementById("photo").files[0].name;
-                                //console.log(document.getElementById("photo").files[0].name);
+                            document.getElementById("backup").addEventListener('change', function() {
+                                document.getElementById("fileName").textContent = document.getElementById("backup").files[0].name;
+                                //console.log(document.getElementById("backup").files[0].name);
                             });
                         </script>
                     </div>
