@@ -95,17 +95,38 @@ session_start();
 
 	require_once "html_elements/head.php";
 ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mt-5">
+                <h2 class="h2 text-center">Logowanie</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
 
-	<form method="POST" class="form-inline col-12">
-        <div class="form-group m-1">
-            <?php if(isset( $_SESSION['login_e'])) {echo '<span style="color:#ff0000;">' .$_SESSION['login_e'].'</span><br>'; unset($_SESSION['login_e']);}?>
-            <label >Login <input type="text" name="login" placeholder="Login" value="JaWitold"></label>
+            <form method="POST" class="form-group">
+
+                <div class="form-row my-3">
+                    <div class="input-group col">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="login">login</label>
+                        </div>
+                        <input type="text" name="login" id="login" placeholder="login" class="form-control">
+                    </div>
+
+                    <div class="input-group col">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="password">hasło</label>
+                        </div>
+                        <input type="password" name="password" id="password" placeholder="hasło" class="form-control">
+                    </div>
+                </div>
+
+                <input type="submit" value="Zaloguj się" class="btn btn-outline-light btn-block">
+                <?php if(isset( $_SESSION['login_e'])) {echo '<span class="text-danger"">' .$_SESSION['login_e'].'</span>'; unset($_SESSION['login_e']);}?>
+            </form>
+            </div>
         </div>
-        <div class="form-group m-1">
-            <label >Hasło <input type="password" name="password" value="qwerty123" placeholder="Hasło" ></label>
-        </div>
-		<input type="submit" value="Zaloguj się" class="ml-3 btn btn-outline-light">
-		
-	</form>
+    </div>
 
 <?php require_once "html_elements/ending.php"; ?>

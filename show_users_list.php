@@ -8,12 +8,13 @@
 ?>
 	
 	<div class ="container">
-	<div class="row">
-		<div class="h2 col-md-6">wszyscy pracownicy</div>
-		<div class="h2 col-md-6 text-right"><a href="add_new_user.php" class="btn btn-success">Dodaj pracownika</a></div>
-	</div>
-	
-	<?php
+        <div class="row my-3">
+            <div class="h2 col-md-6">wszyscy pracownicy</div>
+            <div class="h2 col-md-6 text-right"><a href="add_new_user.php" class="btn btn-success">Dodaj pracownika</a></div>
+        </div>
+        <div class="row">
+
+        <?php
 
 		try {
             require_once "connect.php";
@@ -36,6 +37,9 @@
 		} catch(Exception $e) {
 			echo $e->getMessage();
 		}
+        ?>
 
-		require_once "html_elements/ending.php"
-?>
+        </div>
+    </div>
+
+<?php require_once "html_elements/ending.php"; ?>

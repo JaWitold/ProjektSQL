@@ -283,13 +283,13 @@ class product
         require_once "connect.php";
         global $db;
         $query = $db->prepare('UPDATE products SET productName = :productName, netPrice = :netPrice, tax = :tax, amount = :amount, unitOfMeasure = :uom, photo = :photo WHERE productId = :productId');
-        $query-> bindValue(':productName', $this->productName, PDO::PARAM_STR);
-        $query-> bindValue(':netPrice', $this->netPrice, PDO::PARAM_STR);
-        $query-> bindValue(':tax', $this->tax, PDO::PARAM_INT);
-        $query-> bindValue(':amount', $this->amount, PDO::PARAM_STR);
-        $query-> bindValue(':uom', $this->unitOfMeasure, PDO::PARAM_STR);
-        $query-> bindValue(':photo', $this->photo, PDO::PARAM_STR);
-        $query-> bindValue(':productId', $this->productId, PDO::PARAM_INT);
+        $query->bindValue(':productName', $this->productName, PDO::PARAM_STR);
+        $query->bindValue(':netPrice', $this->netPrice, PDO::PARAM_STR);
+        $query->bindValue(':tax', $this->tax, PDO::PARAM_INT);
+        $query->bindValue(':amount', $this->amount, PDO::PARAM_STR);
+        $query->bindValue(':uom', $this->unitOfMeasure, PDO::PARAM_STR);
+        $query->bindValue(':photo', $this->photo, PDO::PARAM_STR);
+        $query->bindValue(':productId', $this->productId, PDO::PARAM_INT);
         $query->execute();
 
         return true;

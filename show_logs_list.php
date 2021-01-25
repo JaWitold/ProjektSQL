@@ -36,6 +36,9 @@
 		} catch(Exception $e) {
 			echo $e->getMessage();
 		}
+    ?>
 
+    </div>
+<?php
 		require_once "html_elements/ending.php"
 ?>

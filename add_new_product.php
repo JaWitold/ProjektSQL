@@ -72,37 +72,39 @@
 				$destination = "upload/".$photo_new_name;
 				//koniec walidacji danych
 				
-				if($all_ok === true)
-				{
-				    require_once "connect.php";
-				    global $db;
-				    $db->beginTransaction();
-				    $querry = $db->prepare("SELECT * FROM products WHERE productName = :productName");
-					$querry-> bindValue(':productName', $productName, PDO::PARAM_STR);
-					$querry->execute();
-                    $db->rollBack();
-					
-					$result = $querry->rowCount();
-					if($result === 0) {
-						if($photo["error"] !== 4) {
-						    //upload pliku
-						    move_uploaded_file($photo["tmp_name"], $destination);
-						}
-						$querry = $db->prepare('INSERT INTO `products`(`productId`, `productName`, `amount`, `unitOfMeasure`, `netPrice`, `tax`, `photo`) VALUES (NULL, :productName, :amount, :untOfMeasure, :netPrice, :tax, :photo)');
-						$querry-> bindValue(':productName', $productName, PDO::PARAM_STR);
-						$querry-> bindValue(':amount', $amount, PDO::PARAM_STR);
-						$querry-> bindValue(':untOfMeasure', $uom, PDO::PARAM_STR);
-						$querry-> bindValue(':netPrice', $netPrice, PDO::PARAM_STR);
-						$querry-> bindValue(':tax', $tax, PDO::PARAM_STR);
-						$querry-> bindValue(':photo', $photo_new_name, PDO::PARAM_STR);
-						$querry->execute();
+				if($all_ok === true) {
+                    require_once "connect.php";
+                    global $db;
+				    try {
+                        $db->beginTransaction();
+                        $query = $db->prepare("SELECT * FROM products WHERE productId = :productName");
+                        $query->bindValue(':productName', $productName, PDO::PARAM_STR);
+                        $query->execute();
 
-						header("Location: show_products_list.php");
-						exit();
-					}
-					else {
-						$_SESSION["error"] = "istnieje juz produkt o tej nazwie";
-					}
+                        $result = $query->rowCount();
+                        if ($result === 0) {
+                            if ($photo["error"] !== 4) {
+                                //upload pliku
+                                move_uploaded_file($photo["tmp_name"], $destination);
+                            }
+                            $query = $db->prepare('INSERT INTO `products`(`productId`, `productName`, `amount`, `unitOfMeasure`, `netPrice`, `tax`, `photo`) VALUES (NULL, :productName, :amount, :untOfMeasure, :netPrice, :tax, :photo)');
+                            $query->bindValue(':productName', $productName, PDO::PARAM_STR);
+                            $query->bindValue(':amount', $amount, PDO::PARAM_STR);
+                            $query->bindValue(':untOfMeasure', $uom, PDO::PARAM_STR);
+                            $query->bindValue(':netPrice', $netPrice, PDO::PARAM_STR);
+                            $query->bindValue(':tax', $tax, PDO::PARAM_STR);
+                            $query->bindValue(':photo', $photo_new_name, PDO::PARAM_STR);
+                            $query->execute();
+                            $db->commit();
+
+                            header("Location: show_products_list.php");
+                            exit();
+                        } else {
+                            $_SESSION["error"] = "istnieje juz produkt o tej nazwie";
+                        }
+                    } catch (Exception $e) {
+                        $db->rollBack();
+                    }
 				}
 			}
 		} catch(Exception $e) {
@@ -110,9 +112,9 @@
 		}
 
 
-	require_once $_SERVER['DOCUMENT_ROOT']."/ProjektSQL/"."html_elements/head.php";
-	require_once $_SERVER['DOCUMENT_ROOT']."/ProjektSQL/"."html_elements/navbar.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/ProjektSQL/"."html_elements/currentUser.php";
+	require_once "./html_elements/head.php";
+	require_once "./html_elements/navbar.php";
+    require_once "./html_elements/currentUser.php";
 	?>
 
 	<div class="container">
@@ -164,7 +166,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="uom">Jednostka miary</label>
                     </div>
-                    <select type="text" name="uom" id="uom" class="form-control">
+                    <select name="uom" id="uom" class="form-control">
                         <option value="kg"  <?php if(isset($uom) && !strcmp($uom, "kg")){echo "selected"; unset($uom);}?>>kg </option>
                         <option value="szt" <?php if(isset($uom) && !strcmp($uom, "szt" )){echo "selected"; unset($uom);}?>>szt</option>
                     </select>
@@ -196,3 +198,4 @@
             </div>
         </form>
 	</div>
+<?php require_once "html_elements/ending.php"?>
