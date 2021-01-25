@@ -13,7 +13,7 @@
 
 		    global  $roles;
 			if(strlen($_POST['name']) > 2 && strlen($_POST['name']) < 20) $user->setName($_POST['name']); else throw new Exception("Nie poprawna wartosc pola imie");
-			if(strlen($_POST['surname']) > 2 && strlen($_POST['surname']) < 20) $user->setName($_POST['surname']); else throw new Exception("Nie poprawna wartosc pola nazwisko");
+			if(strlen($_POST['surname']) > 2 && strlen($_POST['surname']) < 20) $user->setSurname($_POST['surname']); else throw new Exception("Nie poprawna wartosc pola nazwisko");
 			if(in_array($_POST['role'], $roles))  $user->setRole($_POST['role']); else throw new Exception("Nie poprawna wartosc pola stanowisko");
 			
 			//na wszelki wypadek niech imie i nazwisko bedzie pisane dużą literą programowo
