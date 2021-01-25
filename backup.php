@@ -37,9 +37,9 @@
         $host = 'localhost';
         $dir = './dump.sql';
 
-        chdir ("C:/Programs/xammp/mysql/bin/");
+        chdir ("../../mysql/bin/");
         exec("mysqldump --user={$user} --password={$pass} --host={$host} {$database} --result-file=C:/Programs/xammp/htdocs/ProjektSQL/{$filepath} 2>&1", $output);
-        chdir ("C:/Programs/xammp/htdocs/ProjektSQL");
+        chdir ("../../htdocs/ProjektSQL");
     }
 
     require_once "checkPermissions.php";
@@ -79,12 +79,11 @@
                 generateBackup("./backups/autobackup_" . $currentUser->getLogin()."_". $date->format("Y-m-d_H_i_s") . ".sql");
                 //print_r($_FILES['backup']);
 
-
                 $cmd = "mysql -h localhost -u langner_admin -pqwerty123 langner < {$backup['tmp_name']}";
 
-                chdir ("C:/Programs/xammp/mysql/bin/");
+                chdir ("../../mysql/bin/");
                 exec($cmd);
-                chdir ("C:/Programs/xammp/htdocs/ProjektSQL");
+                chdir ("../../htdocs/ProjektSQL");
                 header("Location: index.php");
                 exit();
             } else {
