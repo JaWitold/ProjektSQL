@@ -27,7 +27,7 @@
 				<span class="h1 text-success">Sukces!</span><br>
 				<p class="text-success">Dodano pracownika</p>
 				<p><?php echo "login: ".$login. " hasło: ".$pass;?></p>
-				<small>Podaj te dane pracownikowi aby mógł aktywować swoje konto<small>
+				<small>Podaj te dane pracownikowi aby mógł aktywować swoje konto</small>
 			</div>
 		</div>
 	</div>

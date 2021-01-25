@@ -54,16 +54,19 @@
 				
 				require_once "connect.php";
 				global $db;
-				$query = $db->prepare("INSERT INTO users(userName, userSurname, login, password, role, dateOfAdd, activePassword) VALUES (:name, :surname, :login, :pass, :role, NULL, :active)");
+				$query = $db->prepare("INSERT INTO users(userName, userSurname, login, password, role, dateOfAdd, activePassword) VALUES (:name, :surname, :login, :pass, :role, :date, :active)");
 
                 $_SESSION["login"] = $user->getLogin();
                 $_SESSION["pass"] = $user->getPassword();
+
+                $date = new DateTime();
 
 				$query->bindValue(":name", $user->getName(), PDO::PARAM_STR);
 				$query->bindValue(":surname", $user->getSurname(), PDO::PARAM_STR);
 				$query->bindValue(":login", $_SESSION["login"], PDO::PARAM_STR);
 				$query->bindValue(":pass", password_hash($_SESSION["pass"], PASSWORD_DEFAULT), PDO::PARAM_STR);
 				$query->bindValue(":role", $user->getRole(), PDO::PARAM_STR);
+				$query->bindValue(":date", $date->format("Y-m-d"), PDO::PARAM_STR);
 				$query->bindValue(":active", $user->isActive(), PDO::PARAM_INT);
 				$query->execute();
 

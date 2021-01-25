@@ -36,12 +36,18 @@ CREATE OR REPLACE TABLE Users (
     login varchar(255) NOT NULL PRIMARY KEY,
     password varchar(255) NOT NULL,
     role varchar(255) NOT NULL,
-    dateOfAdd date,
+    dateOfAdd date NULL,
     activePassword boolean NOT NULL
 );
 
-CREATE TRIGGER `dateOfAdd` BEFORE INSERT ON `users`
-    FOR EACH ROW SET NEW.dateOfAdd=curdate();
+CREATE OR REPLACE TRIGGER `dateOfAdd`
+    AFTER INSERT
+    ON `users`FOR EACH ROW
+BEGIN
+    IF (NEW.dateOfAdd IS NULL) THEN
+        UPDATE users SET NEW.dateOfAdd = curdate() WHERE login = NEW.login;
+    END IF;
+END;
 
 # CREATE OR REPLACE TABLE Corrections (
 #     invoiceId int NOT NULL UNIQUE,

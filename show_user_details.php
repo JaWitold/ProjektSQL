@@ -1,9 +1,10 @@
 ﻿<?php
     require_once "checkPermissions.php";
     isLogged();
-	
+    require_once "c_user.php";
+
+    $c_user = unserialize($_SESSION['user']);
 	try {
-	    require_once "c_user.php";
 		$user = new User($_GET["login"]);
 
         require_once "connect.php";
@@ -43,7 +44,7 @@
 		</div>
 
 		<div class ="row col-md-10 offset-md-1">
-		    <?php if(!strcmp($user->getRole(), "Administrator") ) {
+		    <?php if(!strcmp($c_user->getRole(), "Administrator") ) {
 		    echo '<form class="col-md-6 d-block" method="POST" action="remove_user.php"><input type="hidden" name="login" value="' .$_GET["login"].'"><input type="submit" class="btn btn-outline-danger btn-block disabled" value="usuń dane pracownika" disabled></form>';
 		    echo '<form class="col-md-6 d-block" method="POST" action="edit_user.php"><input type="hidden" name="login" value="' .$_GET["login"].'"><input type="submit" class="btn btn-outline-primary btn-block" value="edytuj dane pracownika"></form>'; }?>
 		</div>
